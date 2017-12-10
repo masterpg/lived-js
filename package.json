@@ -1,0 +1,36 @@
+{
+  "name": "lived-js",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "author": "masterpg",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masterpg/lived-js.git"
+  },
+  "dependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/lodash": "^4.14.85",
+    "@types/mocha": "^2.2.43",
+    "@types/text-encoding": "^0.0.32",
+    "lodash": "^4.17.4",
+    "qs": "github:ljharb/qs",
+    "secure-random": "^1.1.1",
+    "text-encoding": "^0.6.4"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "gulp": "^3.9.1",
+    "gulp-notify": "^3.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-shell": "^0.6.3",
+    "merge-stream": "^1.0.1",
+    "run-sequence": "^2.2.0",
+    "ts-loader": "^3.0.5",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1",
+    "webpack-stream": "^4.0.0"
+  }
+}

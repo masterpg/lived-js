@@ -1,0 +1,11 @@
+{
+  "name": "lived-js",
+  "authors": [
+    "masterpg@livedeveloper.net"
+  ],
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "web-component-tester": "^6.4.1",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.19"
+  }
+}

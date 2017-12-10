@@ -1,0 +1,12 @@
+.idea/
+bower_components/
+node_modules/
+*.log
+*.tmp
+
+/lib/**/*.js.map
+/lib/**/*-test.js
+/lib/**/*-test.d.ts
+
+/test/**/*.js
+/test/**/*.js.map
