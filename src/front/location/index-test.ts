@@ -1,4 +1,4 @@
-import {location} from '.';
+import location from '.';
 
 suite('location', () => {
 

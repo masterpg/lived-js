@@ -1,6 +1,21 @@
-import { LocationData } from './types';
-export { LocationData as Location } from './types';
-export declare namespace location {
+declare namespace location {
+    /**
+     * ロケーション情報を格納するデータクラスです。
+     */
+    class LocationData {
+        constructor(src?: Location | HTMLAnchorElement);
+        url: string;
+        protocol: string;
+        domain: string;
+        port: string;
+        host: string;
+        path: string;
+        hash: string;
+        dir: string;
+        base: string;
+        ext: string;
+        query: any;
+    }
     /**
      * ロケーションを変更します。
      * @param path 変更するパスを指定します。
@@ -57,3 +72,4 @@ export declare namespace location {
      */
     function split(path: string): string[];
 }
+export default location;
