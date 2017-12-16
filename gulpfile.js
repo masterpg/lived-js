@@ -59,7 +59,7 @@ gulp.task('compile:test', () => {
 });
 
 /**
- *
+ * 指定されたターゲットのコンパイルを行います
  * @param target
  */
 function compile(target) {

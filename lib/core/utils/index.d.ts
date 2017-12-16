@@ -1,4 +1,4 @@
-declare namespace utils {
+export declare namespace utils {
     /**
      * 指定された範囲の整数の乱数を生成します。
      * @param min 最小値を指定します。
@@ -12,4 +12,4 @@ declare namespace utils {
      */
     function randomFloat(min: number, max: number): number;
 }
-export = utils;
+export default utils;

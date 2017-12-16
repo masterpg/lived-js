@@ -1,3 +1,3 @@
-import '../../src/core/collection-test';
-import '../../src/core/parser-test';
-import '../../src/core/utils-test';
+import '../../src/core/collection/index-test';
+import '../../src/core/parser/index-test';
+import '../../src/core/utils/index-test';

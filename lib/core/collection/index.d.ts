@@ -84,4 +84,4 @@ declare namespace collection {
         _searchIndex(key: any): number;
     }
 }
-export = collection;
+export default collection;

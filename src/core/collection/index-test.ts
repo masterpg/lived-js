@@ -1,4 +1,5 @@
-import * as core from '.';
+import collection from '.';
+import utils from '../utils';
 
 suite('collection.List', () => {
 
@@ -24,14 +25,14 @@ suite('collection.List', () => {
   });
 
   test('デフォルトの使用ケース1', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     const actual = <Person>list.getItemByKey(4);
     assert.equal(actual.id, 4);
     assert.equal(actual.email, 'haruko@xxx.yyy.zzz');
   });
 
   test('デフォルトの使用ケース2', () => {
-    const list = new core.collection.List<Person>();
+    const list = new collection.List<Person>();
     list.push(persons[0]);
     list.push(persons[1]);
     list.push(persons[2]);
@@ -43,14 +44,14 @@ suite('collection.List', () => {
   });
 
   test('keyFieldを使用した場合', () => {
-    const list = new core.collection.List(persons, 'email');
+    const list = new collection.List(persons, 'email');
     const actual = <Person>list.getItemByKey('haruko@xxx.yyy.zzz');
     assert.equal(actual.id, 4);
     assert.equal(actual.email, 'haruko@xxx.yyy.zzz');
   });
 
   test('getItemByKey(): binarySearchを指定した場合(昇順)', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     // バイナリサーチ前にリストをソート(昇順)
     list.sortItems();
     // バイナリサーチを指定してアイテム取得
@@ -60,7 +61,7 @@ suite('collection.List', () => {
   });
 
   test('removeItem(): indexを指定した場合', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     const targetItem = persons[1];
     const removedItem = <Person>list.removeItem(1);
     assert.equal(list.length, persons.length - 1);
@@ -69,7 +70,7 @@ suite('collection.List', () => {
   });
 
   test('removeItem(): アイテムを指定した場合', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     const targetItem = persons[1];
     const removedItem = <Person>list.removeItem(targetItem);
     assert.equal(list.length, persons.length - 1);
@@ -78,7 +79,7 @@ suite('collection.List', () => {
   });
 
   test('removeItemByKey()', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     const targetItem = persons[1];
     const removedItem = <Person>list.removeItemByKey(targetItem.id);
     assert.equal(list.length, persons.length - 1);
@@ -87,7 +88,7 @@ suite('collection.List', () => {
   });
 
   test('removeItemByKey(): binarySearchを指定した場合', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     const targetItem = persons[1];
     // バイナリサーチ前にリストをソート
     list.sortItems();
@@ -100,26 +101,26 @@ suite('collection.List', () => {
 
   test('insertItem()', () => {
     const newItem = {id: 6, email: 'taro@xxx.yyy.zzz', first: '太郎', last: '山田'};
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     list.insertItem(1, newItem);
     assert.equal(list.length, persons.length + 1);
     assert.equal(list.indexOf(newItem), 1);
   });
 
   test('contains()', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     const targetItem = persons[1];
     assert.isTrue(list.contains(targetItem));
   });
 
   test('containsByKey()', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     const targetItem = persons[1];
     assert.isTrue(list.containsByKey(targetItem.id));
   });
 
   test('containsByKey(): binarySearchを指定した場合', () => {
-    const list = new core.collection.List(persons);
+    const list = new collection.List(persons);
     // バイナリサーチ前にリストをソート
     list.sortItems(true);
     // バイナリサーチを指定してアイテム有無をチェック
@@ -128,29 +129,29 @@ suite('collection.List', () => {
   });
 
   test('clear()', () => {
-    const list = new core.collection.List(['a', 'b', 'c']);
+    const list = new collection.List(['a', 'b', 'c']);
     list.clear();
     assert.equal(list.length, 0);
   });
 
   test('addAll()', () => {
-    const list = new core.collection.List(['a', 'b']);
+    const list = new collection.List(['a', 'b']);
     list.addAll(['c', 'd']);
     const array = ([] as string[]).concat(list);
     assert.deepEqual(array, ['a', 'b', 'c', 'd']);
   });
 
   test('sortItems(): 昇順', () => {
-    const list = new core.collection.List<{ id: number }>();
+    const list = new collection.List<{ id: number }>();
     for (let i = 0; i < 100; i++) {
       list.push({
-        id: core.utils.randomInt(1, 100)
+        id: utils.randomInt(1, 100)
       });
     }
 
     list.sortItems();
 
-    let prev: {id: number} = list[0];
+    let prev: { id: number } = list[0];
     for (let i = 0; i < 100; i++) {
       let current = list[i];
       expect(current.id).to.be.at.least(prev.id);

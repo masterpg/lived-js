@@ -220,4 +220,4 @@ namespace collection {
 
 }
 
-export = collection;
+export default collection;

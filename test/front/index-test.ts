@@ -1,1 +1,1 @@
-import '../../src/front/location-test';
+import '../../src/front/location/index-test';

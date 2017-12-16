@@ -1,7 +1,7 @@
 import secureRandom = require('secure-random');
-import * as core from '.';
+import parser from '../parser';
 
-namespace utils {
+export namespace utils {
 
   /**
    * 指定された範囲の整数の乱数を生成します。
@@ -20,7 +20,7 @@ namespace utils {
       randomBytes[0] = randomBytes[0] % 32;
 
       // 生成されたバイト値の乱数を10進数に変換
-      let randomHex = core.parser.bytesToHex(randomBytes);
+      let randomHex = parser.bytesToHex(randomBytes);
       let randomInt = parseInt(randomHex, 16);
 
       // 指定された最小値〜最大値の範囲に調整
@@ -38,9 +38,9 @@ namespace utils {
    * @param max 最大値を指定します。
    */
   export function randomFloat(min: number, max: number): number {
-    return ( Math.random() * ( ( max + 1 ) - min ) ) + min;
+    return (Math.random() * ((max + 1) - min)) + min;
   }
 
 }
 
-export = utils;
+export default utils;
