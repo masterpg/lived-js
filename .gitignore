@@ -4,6 +4,9 @@ node_modules/
 *.log
 *.tmp
 
+functions/lib/
+functions/src/serviceAccountKey.json
+
 /lib/**/*.js.map
 /lib/**/*-test.js
 /lib/**/*-test.d.ts

@@ -16,11 +16,15 @@ const browserSync = require('browser-sync');
 //----------------------------------------------------------------------
 
 /**
- * srcディレクトリ内のtsファイルのコンパイルを行います。
+ * srcディレクトリ内のtsファイルのコンパイルを実行します。
  */
-gulp.task('compile', shell.task([
-  'cd src && ../node_modules/.bin/tsc --project ../tsconfig.json --declaration --outDir ../lib',
-]));
+gulp.task('compile',
+  shell.task([
+    'cd src && ../node_modules/.bin/tsc --project ../tsconfig.json --declaration --outDir ../lib',
+  ], {
+    verbose: true,
+  })
+);
 
 /**
  * 開発(コーディング)時はこのタスクを実行しておきます。
@@ -33,6 +37,17 @@ gulp.task('dev', (done) => {
     ],
     done);
 });
+
+/**
+ * デプロイ処理を実行します。
+ */
+gulp.task('deploy',
+  shell.task([
+    'firebase deploy --only functions',
+  ], {
+    verbose: true,
+  })
+);
 
 /**
  * browser-syncを起動します。
@@ -57,6 +72,12 @@ gulp.task('compile:test', () => {
     compile('front')
   );
 });
+
+//----------------------------------------------------------------------
+//
+//  Functions
+//
+//----------------------------------------------------------------------
 
 /**
  * 指定されたターゲットのコンパイルを行います
