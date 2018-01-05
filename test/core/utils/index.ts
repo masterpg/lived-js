@@ -1,4 +1,5 @@
-import * as core from '.';
+/// <reference path="../../../src/typings.d.ts" />
+import utils from '../../../src/core/utils';
 
 suite('utils', () => {
 
@@ -10,7 +11,7 @@ suite('utils', () => {
 
   test('randomInt(): No.1', function () {
     for (let i = 0; i < 100; i++) {
-      const actual = core.utils.randomInt(-10, 10);
+      const actual = utils.randomInt(-10, 10);
       assert.isAtLeast(actual, -11);
       assert.isAtMost(actual, 11);
     }

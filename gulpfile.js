@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const path = require('path');
+const del = require('del');
 const sequence = require('run-sequence');
 const merge = require('merge-stream');
 const notify = require('gulp-notify');
@@ -7,7 +8,7 @@ const plumber = require('gulp-plumber');
 const shell = require('gulp-shell');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
-const browserSync = require('browser-sync');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 //----------------------------------------------------------------------
 //
@@ -15,27 +16,97 @@ const browserSync = require('browser-sync');
 //
 //----------------------------------------------------------------------
 
+//--------------------------------------------------
+//  ライブラリのビルドタスク
+//--------------------------------------------------
+
+/**
+ * ライブラリのビルドを行います。
+ */
+gulp.task('build', (done) => {
+  return sequence(
+    'clean:ts',
+    'compile',
+    'copy-to-lib',
+    'clean:ts',
+    done
+  );
+});
+
 /**
  * srcディレクトリ内のtsファイルのコンパイルを実行します。
  */
 gulp.task('compile',
   shell.task([
-    'cd src && ../node_modules/.bin/tsc --project ../tsconfig.json --declaration --outDir ../lib',
+    './node_modules/.bin/tsc --project ./tsconfig.json --declaration',
   ], {
     verbose: true,
   })
 );
 
 /**
- * 開発(コーディング)時はこのタスクを実行しておきます。
+ * libディレクトリへ必要なリソースをコピーします。
  */
-gulp.task('dev', (done) => {
+gulp.task('copy-to-lib', () => {
+  return gulp.src([
+    './src/**/*.js',
+    './src/**/*.d.ts',
+    '!./src/typings.d.ts',
+  ], {base: 'src'})
+    .pipe(gulp.dest('lib'));
+});
+
+//--------------------------------------------------
+//  ライブラリの開発タスク
+//--------------------------------------------------
+
+/**
+ * 開発用のローカルサーバーを起動します。
+ */
+gulp.task('serve', (done) => {
   return sequence(
+    'clean:ts',
     [
-      'compile:test',
-      'browser-sync'
+      'serve:bundle',
+      'serve:firebase'
     ],
     done);
+});
+
+/**
+ * testディレクトリ内の各パッケージをバンドルします。
+ */
+gulp.task('serve:bundle', () => {
+  return merge(
+    bundle('core'),
+    bundle('front')
+  );
+});
+
+/**
+ * firebaseのローカルサーバーを起動します。
+ */
+gulp.task('serve:firebase',
+  shell.task([
+    'firebase serve --only functions,hosting --port 5000 --host localhost',
+  ], {
+    verbose: true,
+  })
+);
+
+//--------------------------------------------------
+//  共通/その他
+//--------------------------------------------------
+
+/**
+ * TypeScriptのコンパイルで出力されたファイルをクリーンします。
+ */
+gulp.task('clean:ts', function () {
+  return del.sync([
+    './src/**/{*.js,*.js.map,*.d.ts}',
+    './test/**/{*.js,*.js.map,*.d.ts}',
+    '!./src/typings.d.ts',
+  ]);
 });
 
 /**
@@ -49,30 +120,6 @@ gulp.task('deploy',
   })
 );
 
-/**
- * browser-syncを起動します。
- */
-gulp.task('browser-sync', () => {
-  browserSync.init({
-    port: 5000,
-    ui: {port: 5005},
-    open: false,
-    server: {
-      baseDir: './',
-    }
-  });
-});
-
-/**
- * testディレクトリ内のtsファイルをwebpackでコンパイルします。
- */
-gulp.task('compile:test', () => {
-  return merge(
-    compile('core'),
-    compile('front')
-  );
-});
-
 //----------------------------------------------------------------------
 //
 //  Functions
@@ -80,31 +127,39 @@ gulp.task('compile:test', () => {
 //----------------------------------------------------------------------
 
 /**
- * 指定されたターゲットのコンパイルを行います
- * @param target
+ * 指定されたパッケージをバンドルします。
+ * @param package
  */
-function compile(target) {
+function bundle(package) {
   return webpackStream({
     entry: {
-      'index-test': `./test/${target}/index-test`,
+      'index': `./test/${package}/index`,
     },
     output: {
       filename: '[name].bundle.js',
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js']
+      extensions: ['.ts', '.tsx', '.js'],
+      plugins: [new TsconfigPathsPlugin({configFile: './tsconfig.json'})]
     },
     module: {
       rules: [
         {
           test: /\.tsx?$/,
-          use: 'ts-loader',
-          exclude: /node_modules/
+          use: [{
+            loader: 'ts-loader',
+            options: {
+              compilerOptions: {
+                sourceMap: true,
+              },
+            },
+          }],
+          exclude: /node_modules/,
         }
       ]
     },
     devtool: 'inline-source-map',
     watch: true,
   }, webpack)
-    .pipe(gulp.dest(`test/${target}`));
+    .pipe(gulp.dest(`test/${package}`));
 }

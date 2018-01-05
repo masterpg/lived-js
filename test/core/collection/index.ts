@@ -1,5 +1,6 @@
-import collection from '.';
-import utils from '../utils';
+/// <reference path="../../../src/typings.d.ts" />
+import collection from '../../../src/core/collection';
+import utils from '../../../src/core/utils';
 
 suite('collection.List', () => {
 
