@@ -1,5 +1,5 @@
-/// <reference path="../../../src/typings.d.ts" />
-import parser from '../../../src/core/parser';
+/// <reference path="../../../lib/typings.d.ts" />
+import parser from '../../../lib/core/parser';
 
 suite('parser', () => {
 

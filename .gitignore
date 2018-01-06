@@ -4,12 +4,15 @@ node_modules/
 *.log
 *.tmp
 
-functions/lib/
-functions/src/serviceAccountKey.json
+/functions/lib/serviceAccountKey.json
+/functions/lib/**/*.js
+/functions/lib/**/*.js.map
+/functions/lib/**/*.d.ts
+/functions/test/**/*.js
+/functions/test/**/*.js.map
 
 /lib/**/*.js.map
-/lib/**/*-test.js
-/lib/**/*-test.d.ts
-
 /test/**/*.js
 /test/**/*.js.map
+/test/**/*.d.ts
+

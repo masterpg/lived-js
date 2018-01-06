@@ -1,5 +1,5 @@
-/// <reference path="../../../src/typings.d.ts" />
-import location from '../../../src/front/location';
+/// <reference path="../../../lib/typings.d.ts" />
+import location from '../../../lib/front/location';
 
 suite('location', () => {
 

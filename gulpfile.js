@@ -27,8 +27,7 @@ gulp.task('build', (done) => {
   return sequence(
     'clean:ts',
     'compile',
-    'copy-to-lib',
-    'clean:ts',
+    'clean:ts:test',
     done
   );
 });
@@ -45,18 +44,6 @@ gulp.task('compile',
   })
 );
 
-/**
- * libディレクトリへ必要なリソースをコピーします。
- */
-gulp.task('copy-to-lib', () => {
-  return gulp.src([
-    './src/**/*.js',
-    './src/**/*.d.ts',
-    '!./src/typings.d.ts',
-  ], {base: 'src'})
-    .pipe(gulp.dest('lib'));
-});
-
 //--------------------------------------------------
 //  ライブラリの開発タスク
 //--------------------------------------------------
@@ -66,7 +53,7 @@ gulp.task('copy-to-lib', () => {
  */
 gulp.task('serve', (done) => {
   return sequence(
-    'clean:ts',
+    'clean:ts:test',
     [
       'serve:bundle',
       'serve:firebase'
@@ -102,11 +89,18 @@ gulp.task('serve:firebase',
 /**
  * TypeScriptのコンパイルで出力されたファイルをクリーンします。
  */
-gulp.task('clean:ts', function () {
+gulp.task('clean:ts', ['clean:ts:lib', 'clean:ts:test']);
+
+gulp.task('clean:ts:lib', () => {
   return del.sync([
-    './src/**/{*.js,*.js.map,*.d.ts}',
+    './lib/**/{*.js,*.js.map,*.d.ts}',
+    '!./lib/typings.d.ts',
+  ]);
+});
+
+gulp.task('clean:ts:test', () => {
+  return del.sync([
     './test/**/{*.js,*.js.map,*.d.ts}',
-    '!./src/typings.d.ts',
   ]);
 });
 
