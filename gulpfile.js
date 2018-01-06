@@ -38,6 +38,7 @@ gulp.task('build', (done) => {
  */
 gulp.task('compile',
   shell.task([
+    './node_modules/.bin/tslint -p tslint.json',
     './node_modules/.bin/tsc --project ./tsconfig.json --declaration',
   ], {
     verbose: true,

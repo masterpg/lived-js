@@ -15,17 +15,17 @@ export namespace utils {
       // Math.pow(2, 53) - 1     = 9007199254740991
 
       // secureRandom()はバイト単位でしか乱数を生成できなので、
-      let randomBytes: Uint8Array = secureRandom(7, {type: 'Uint8Array'});
+      const randomBytes: Uint8Array = secureRandom(7, {type: 'Uint8Array'});
       // 必要ない上位ビットを切り捨てる
       randomBytes[0] = randomBytes[0] % 32;
 
       // 生成されたバイト値の乱数を10進数に変換
-      let randomHex = parser.bytesToHex(randomBytes);
-      let randomInt = parseInt(randomHex, 16);
+      const randHex = parser.bytesToHex(randomBytes);
+      const randInt = parseInt(randHex, 16);
 
       // 指定された最小値〜最大値の範囲に調整
-      let maxWork = max - min + 1;
-      let mod = randomInt % maxWork;
+      const maxWork = max - min + 1;
+      const mod = randInt % maxWork;
       return min + mod;
     } else {
       return Math.floor(Math.random() * (max - min) + min);

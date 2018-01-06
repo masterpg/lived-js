@@ -67,7 +67,7 @@ namespace location {
    * @param url
    */
   export function parse(url): LocationData {
-    let anchor = document.createElement('a') as HTMLAnchorElement;
+    const anchor = document.createElement('a');
     anchor.href = url;
     return new LocationData(anchor);
   }
@@ -134,8 +134,7 @@ namespace location {
     }
 
     let path = '';
-    for (let i = 0; i < args.length; i += 1) {
-      let segment = args[i];
+    for (const segment of args) {
       if (!path) {
         path += segment;
       } else {
@@ -151,7 +150,7 @@ namespace location {
    * @param path
    */
   export function split(path: string): string[] {
-    let isAbsolutePath = __isAbsolute(path);
+    const isAbsolutePath = __isAbsolute(path);
     return __normalizeArray(path.split('/'), !isAbsolutePath);
   }
 
@@ -165,18 +164,18 @@ namespace location {
    * normalize path
    */
   function __normalize(path: string): string {
-    let isAbsolutePath = __isAbsolute(path);
-    let trailingSlash = path && path[path.length - 1] === '/';
+    const isAbsolutePath = __isAbsolute(path);
+    const trailingSlash = path && path[path.length - 1] === '/';
 
-    path = __normalizeArray(path.split('/'), !isAbsolutePath).join('/');
+    let pathStr = __normalizeArray(path.split('/'), !isAbsolutePath).join('/');
 
-    if (!path && !isAbsolutePath) {
-      path += '.';
+    if (!pathStr && !isAbsolutePath) {
+      pathStr += '.';
     }
-    if (path && trailingSlash) {
-      path += '/';
+    if (pathStr && trailingSlash) {
+      pathStr += '/';
     }
-    return (isAbsolutePath ? '/' : '') + path;
+    return (isAbsolutePath ? '/' : '') + pathStr;
   }
 
   /**
@@ -185,10 +184,9 @@ namespace location {
    * @param allowAboveRoot
    */
   function __normalizeArray(parts: string[], allowAboveRoot: boolean): string[] {
-    let res: string[] = [];
+    const res: string[] = [];
 
-    for (let i = 0; i < parts.length; i += 1) {
-      let p = parts[i];
+    for (const p of parts) {
       if (!p || p === '.') continue;
       if (p === '..') {
         if (res.length && res[res.length - 1] !== '..') {
@@ -202,6 +200,7 @@ namespace location {
         res.push(p);
       }
     }
+
     return res;
   }
 

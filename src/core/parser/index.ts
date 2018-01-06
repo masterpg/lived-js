@@ -22,8 +22,7 @@ namespace parser {
    */
   export function bytesToHex(bytes: Uint8Array): string {
     let result = '';
-    for (let i = 0; i < bytes.length; i++) {
-      const byte = bytes[i];
+    for (const byte of bytes) {
       const part = byte < 16 ? '0' : '';
       result += (part + byte.toString(16));
     }
@@ -34,12 +33,13 @@ namespace parser {
    * 16進数文字列からバイト配列を作成します。
    */
   export function hexToBytes(hex: string): Uint8Array {
-    if ((hex.length % 2) != 0) {
-      hex = _.padStart(hex, hex.length + 1, '0');
+    let hexStr = hex;
+    if ((hexStr.length % 2) !== 0) {
+      hexStr = _.padStart(hexStr, hexStr.length + 1, '0');
     }
-    let result = new Uint8Array(Math.floor(hex.length / 2));
-    for (let i = 0; i < hex.length; i += 2) {
-      const num = hex.substring(i, i + 2);
+    const result = new Uint8Array(Math.floor(hexStr.length / 2));
+    for (let i = 0; i < hexStr.length; i += 2) {
+      const num = hexStr.substring(i, i + 2);
       result[Math.floor(i / 2)] = parseInt(num, 16);
     }
     return result;
@@ -51,7 +51,7 @@ namespace parser {
    * @param object
    */
   export function objectToQueryString(object: {} | null | undefined): string {
-    if (!object || Object.keys(object).length == 0) {
+    if (!object || Object.keys(object).length === 0) {
       return '';
     }
 
@@ -60,13 +60,11 @@ namespace parser {
       const value = object[param];
       param = encodeURIComponent(param);
       if (Array.isArray(value)) {
-        for (let i = 0; i < value.length; i++) {
-          queryParts.push(`${param}=${encodeURIComponent(value[i])}`);
+        for (const v of value) {
+          queryParts.push(`${param}=${encodeURIComponent(v)}`);
         }
-      } else if (value !== null) {
+      } else if (!(value === undefined || value === null)) {
         queryParts.push(`${param}=${encodeURIComponent(value)}`);
-      } else {
-        queryParts.push(param);
       }
     }
     return queryParts.join('&');
@@ -111,10 +109,10 @@ namespace parser {
    */
   export function bytesToDocument(buff: Uint8Array, mimeType: string): Document {
     const text = bytesToText(buff);
-    const parser = new DOMParser();
+    const domParser = new DOMParser();
     let doc: Document;
     try {
-      doc = parser.parseFromString(text, mimeType);
+      doc = domParser.parseFromString(text, mimeType);
     } catch (err) {
       throw new Error('Uint8ArrayからDocumentへの変換に失敗しました: ' + err);
     }
@@ -130,10 +128,10 @@ namespace parser {
    */
   export function bytesToXML(buff: Uint8Array): XMLDocument {
     const text = bytesToText(buff);
-    const parser = new DOMParser();
+    const domParser = new DOMParser();
     let xml: XMLDocument;
     try {
-      xml = parser.parseFromString(text, 'application/xml') as XMLDocument;
+      xml = domParser.parseFromString(text, 'application/xml') as XMLDocument;
     } catch (err) {
       throw new Error('Uint8ArrayからXMLDocumentへの変換に失敗しました: ' + err);
     }

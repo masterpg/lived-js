@@ -13,20 +13,46 @@ namespace collection {
 
     /**
      * アイテムデータリストのインスタンスを生成します。
+     * @param keyField_or_arrayLength
+     *   キーフィールドまたは配列の長さを指定します。
+     *
+     *   リスト内のアイテムを特定するキーを指定したい場合はフィールド名を指定します。
+     *   指定しなかった場合はデフォルトで"id"がキーフィールドになります。
+     *
+     *   配列の長さが決まっている場合は配列の長さを指定します。
+     */
+    constructor(keyField_or_arrayLength?: string | number);
+
+    /**
+     * アイテムデータリストのインスタンスを生成します。
      * @param items
-     *   アイテムデータリストのもとになるアイテムリストを指定します(任意)。
+     *   アイテムデータリストのもとになるアイテムリストを指定します。
      * @param keyField
-     *   リスト内のアイテムを特定するキーとなるフィールドを指定します(任意)。
+     *   リスト内のアイテムを特定するキーとなるフィールドを指定します。
      *   指定しないかった場合はデフォルトで"id"がキーフィールドになります。
      */
-    constructor(items?: Array<T>, keyField?: string) {
-      super();
+    constructor(items: T[], keyField?: string);
 
-      this.keyField = keyField ? keyField : 'id';
+    constructor(arg1?: number | string | T[], arg2?: string) {
+      let keyField = 'id';
 
-      if (items) {
-        this.addAll(items);
+      // arg1がnumberはシステム的に呼び出されることがある
+      // (splice()などが使用されると呼び出される)
+      if (typeof arg1 === 'number') {
+        super(arg1);
       }
+      // arg1が配列の場合
+      else if (Array.isArray(arg1)) {
+        super(...arg1);
+        keyField = arg2 ? arg2 : keyField;
+      }
+      // arg1がstringまたは空の場合
+      else {
+        super();
+        keyField = arg1 ? arg1 : keyField;
+      }
+
+      this.keyField = keyField;
     }
 
     //----------------------------------------------------------------------
@@ -77,9 +103,9 @@ namespace collection {
       if (binarySearch) {
         return this._searchIndex(key);
       } else {
-        let keyField = this.keyField;
+        const keyField = this.keyField;
         for (let i = 0; i < this.length; i++) {
-          if (this[i][keyField] == key) {
+          if (this[i][keyField] === key) {
             return i;
           }
         }
@@ -144,7 +170,7 @@ namespace collection {
      *   バイナリサーチは事前にsortItems()でリストをソートしておく必要があります。
      */
     containsByKey(key: any, binarySearch?: boolean): boolean {
-      let index = this.getIndexByKey(key, binarySearch);
+      const index = this.getIndexByKey(key, binarySearch);
       return index >= 0;
     }
 
@@ -160,8 +186,8 @@ namespace collection {
      * @param items
      */
     addAll<U extends T>(items: U[]): void {
-      for (let i = 0; i < items.length; i++) {
-        this.push(items[i]);
+      for (const item of items) {
+        this.push(item);
       }
     }
 
@@ -191,7 +217,7 @@ namespace collection {
     //----------------------------------------------------------------------
 
     _searchIndex(key: any): number {
-      let cmp = (key1: any, key2: any) => {
+      const cmp = (key1: any, key2: any) => {
         if (!this._desc) {
           if (key1 < key2) return -1;
           if (key1 > key2) return 1;
@@ -208,7 +234,7 @@ namespace collection {
       while (head <= tail) {
         const where = head + Math.floor((tail - head) / 2);
         const c = cmp(this[where][this.keyField], key);
-        if (0 == c) {
+        if (0 === c) {
           return where;
         }
         if (0 < c) tail = where - 1;

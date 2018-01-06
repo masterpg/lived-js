@@ -100,11 +100,28 @@ suite('parser', () => {
     assert.equal(actual, 'first=taro&last=yamada&age=15');
   });
 
-  test('objectToQueryString(): スラッシュを含んだ場合', () => {
+  test('objectToQueryString(): プロパティの値にスラッシュを含んだ場合', () => {
     const actual = parser.objectToQueryString({
       home: 'http://taro.yamada/home'
     });
     assert.equal(actual, 'home=http%3A%2F%2Ftaro.yamada%2Fhome');
+  });
+
+  test('objectToQueryString(): プロパティの値が配列の場合', () => {
+    const actual = parser.objectToQueryString({
+      array: ['one', 'two', 'three']
+    });
+    assert.equal(actual, 'array=one&array=two&array=three');
+  });
+
+  test('objectToQueryString(): プロパティの値が空の場合', () => {
+    const actual = parser.objectToQueryString({
+      first: 'taro',
+      last: 'yamada',
+      empty1: undefined,
+      empty2: null,
+    });
+    assert.equal(actual, 'first=taro&last=yamada');
   });
 
   test('objectToQueryString(): nullを指定した場合', () => {

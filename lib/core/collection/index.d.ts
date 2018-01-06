@@ -5,13 +5,24 @@ declare namespace collection {
     class List<T> extends Array<T> {
         /**
          * アイテムデータリストのインスタンスを生成します。
+         * @param keyField_or_arrayLength
+         *   キーフィールドまたは配列の長さを指定します。
+         *
+         *   リスト内のアイテムを特定するキーを指定したい場合はフィールド名を指定します。
+         *   指定しなかった場合はデフォルトで"id"がキーフィールドになります。
+         *
+         *   配列の長さが決まっている場合は配列の長さを指定します。
+         */
+        constructor(keyField_or_arrayLength?: string | number);
+        /**
+         * アイテムデータリストのインスタンスを生成します。
          * @param items
-         *   アイテムデータリストのもとになるアイテムリストを指定します(任意)。
+         *   アイテムデータリストのもとになるアイテムリストを指定します。
          * @param keyField
-         *   リスト内のアイテムを特定するキーとなるフィールドを指定します(任意)。
+         *   リスト内のアイテムを特定するキーとなるフィールドを指定します。
          *   指定しないかった場合はデフォルトで"id"がキーフィールドになります。
          */
-        constructor(items?: Array<T>, keyField?: string);
+        constructor(items: T[], keyField?: string);
         _desc: boolean;
         /**
          * リスト内のアイテムを特定するキーとなるフィールドです。

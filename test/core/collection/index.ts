@@ -27,7 +27,9 @@ suite('collection.List', () => {
 
   test('デフォルトの使用ケース1', () => {
     const list = new collection.List(persons);
-    const actual = <Person>list.getItemByKey(4);
+    const actual = list.getItemByKey(4);
+    assert.isNotNull(actual);
+    if (actual === null) return;
     assert.equal(actual.id, 4);
     assert.equal(actual.email, 'haruko@xxx.yyy.zzz');
   });
@@ -39,14 +41,18 @@ suite('collection.List', () => {
     list.push(persons[2]);
     list.push(persons[3]);
     list.push(persons[4]);
-    const actual = <Person>list.getItemByKey(4);
+    const actual = list.getItemByKey(4);
+    assert.isNotNull(actual);
+    if (actual === null) return;
     assert.equal(actual.id, 4);
     assert.equal(actual.email, 'haruko@xxx.yyy.zzz');
   });
 
   test('keyFieldを使用した場合', () => {
     const list = new collection.List(persons, 'email');
-    const actual = <Person>list.getItemByKey('haruko@xxx.yyy.zzz');
+    const actual = list.getItemByKey('haruko@xxx.yyy.zzz');
+    assert.isNotNull(actual);
+    if (actual === null) return;
     assert.equal(actual.id, 4);
     assert.equal(actual.email, 'haruko@xxx.yyy.zzz');
   });
@@ -56,7 +62,9 @@ suite('collection.List', () => {
     // バイナリサーチ前にリストをソート(昇順)
     list.sortItems();
     // バイナリサーチを指定してアイテム取得
-    const actual = <Person>list.getItemByKey(4, true);
+    const actual = list.getItemByKey(4, true);
+    assert.isNotNull(actual);
+    if (actual === null) return;
     assert.equal(actual.id, 4);
     assert.equal(actual.email, 'haruko@xxx.yyy.zzz');
   });
@@ -64,7 +72,9 @@ suite('collection.List', () => {
   test('removeItem(): indexを指定した場合', () => {
     const list = new collection.List(persons);
     const targetItem = persons[1];
-    const removedItem = <Person>list.removeItem(1);
+    const removedItem = list.removeItem(1);
+    assert.isNotNull(removedItem);
+    if (removedItem === null) return;
     assert.equal(list.length, persons.length - 1);
     assert.equal(removedItem.id, targetItem.id);
     assert.isNotOk(list.getItemByKey(removedItem));
@@ -73,7 +83,9 @@ suite('collection.List', () => {
   test('removeItem(): アイテムを指定した場合', () => {
     const list = new collection.List(persons);
     const targetItem = persons[1];
-    const removedItem = <Person>list.removeItem(targetItem);
+    const removedItem = list.removeItem(targetItem);
+    assert.isNotNull(removedItem);
+    if (removedItem === null) return;
     assert.equal(list.length, persons.length - 1);
     assert.equal(removedItem.id, targetItem.id);
     assert.isNotOk(list.getItemByKey(removedItem));
@@ -82,7 +94,9 @@ suite('collection.List', () => {
   test('removeItemByKey()', () => {
     const list = new collection.List(persons);
     const targetItem = persons[1];
-    const removedItem = <Person>list.removeItemByKey(targetItem.id);
+    const removedItem = list.removeItemByKey(targetItem.id);
+    assert.isNotNull(removedItem);
+    if (removedItem === null) return;
     assert.equal(list.length, persons.length - 1);
     assert.equal(removedItem.id, targetItem.id);
     assert.isNotOk(list.getItemByKey(removedItem));
@@ -94,7 +108,9 @@ suite('collection.List', () => {
     // バイナリサーチ前にリストをソート
     list.sortItems();
     // バイナリサーチを指定してアイテム削除
-    const removedItem = <Person>list.removeItemByKey(targetItem.id, true);
+    const removedItem = list.removeItemByKey(targetItem.id, true);
+    assert.isNotNull(removedItem);
+    if (removedItem === null) return;
     assert.equal(list.length, persons.length - 1);
     assert.equal(removedItem.id, targetItem.id);
     assert.isNotOk(list.getItemByKey(removedItem));
@@ -154,7 +170,7 @@ suite('collection.List', () => {
 
     let prev: { id: number } = list[0];
     for (let i = 0; i < 100; i++) {
-      let current = list[i];
+      const current = list[i];
       expect(current.id).to.be.at.least(prev.id);
       prev = current;
     }
