@@ -4,15 +4,27 @@ node_modules/
 *.log
 *.tmp
 
-/functions/lib/serviceAccountKey.json
-/functions/lib/**/*.js
-/functions/lib/**/*.js.map
-/functions/lib/**/*.d.ts
+/functions/lib/
+
+/functions/src/serviceAccountKey.json
+/functions/src/**/*.js
+/functions/src/**/*.js.map
+/functions/src/**/*.d.ts
+
 /functions/test/**/*.js
 /functions/test/**/*.js.map
+/functions/test/**/*.d.ts
+!/functions/test/typings.d.ts
 
 /lib/**/*.js.map
+
+/src/**/*.js
+/src/**/*.js.map
+/src/**/*.d.ts
+!/src/typings.d.ts
+
 /test/**/*.js
 /test/**/*.js.map
 /test/**/*.d.ts
+!/test/typings.d.ts
 

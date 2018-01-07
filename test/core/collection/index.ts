@@ -1,6 +1,6 @@
-/// <reference path="../../../lib/typings.d.ts" />
-import collection from '../../../lib/core/collection';
-import utils from '../../../lib/core/utils';
+/// <reference path="../../../src/typings.d.ts" />
+import collection from '../../../src/core/collection';
+import utils from '../../../src/core/utils';
 
 suite('collection.List', () => {
 

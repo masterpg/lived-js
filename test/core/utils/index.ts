@@ -1,5 +1,5 @@
-/// <reference path="../../../lib/typings.d.ts" />
-import utils from '../../../lib/core/utils';
+/// <reference path="../../../src/typings.d.ts" />
+import utils from '../../../src/core/utils';
 
 suite('utils', () => {
 

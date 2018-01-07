@@ -3,12 +3,11 @@ const path = require('path');
 const del = require('del');
 const sequence = require('run-sequence');
 const merge = require('merge-stream');
-const notify = require('gulp-notify');
-const plumber = require('gulp-plumber');
 const shell = require('gulp-shell');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 //----------------------------------------------------------------------
 //
@@ -17,7 +16,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 //----------------------------------------------------------------------
 
 //--------------------------------------------------
-//  ライブラリのビルドタスク
+//  ビルドタスク
 //--------------------------------------------------
 
 /**
@@ -34,12 +33,12 @@ gulp.task('build', (done) => {
 });
 
 /**
- * libディレクトリ内のtsファイルをコンパイルします。
+ * libディレクトリ内のtsファイルのコンパイルを実行します。
  */
 gulp.task('compile',
   shell.task([
     './node_modules/.bin/tslint -p tslint.json',
-    './node_modules/.bin/tsc --project ./tsconfig.json --declaration',
+    './node_modules/.bin/tsc --project ./tsconfig.json',
   ], {
     verbose: true,
   })
@@ -51,45 +50,39 @@ gulp.task('compile',
 gulp.task('copy-to-lib', () => {
   return gulp.src([
     './src/**/*.js',
-    './src/**/*.d.ts',
-    '!./src/typings.d.ts',
+    './src/serviceAccountKey.json',
   ], {base: 'src'})
     .pipe(gulp.dest('lib'));
 });
 
 //--------------------------------------------------
-//  ライブラリの開発タスク
+//  テストタスク
 //--------------------------------------------------
 
 /**
  * 開発を行うためのタスクを起動します。
  */
-gulp.task('dev', (done) => {
+gulp.task('test', (done) => {
   return sequence(
     'clean:ts',
-    [
-      'dev:bundle',
-      'dev:serve'
-    ],
+    'test:bundle',
+    'test:mocha',
     done);
 });
 
 /**
- * testディレクトリ内の各パッケージをバンドルします。
+ * testディレクトリのソースをバンドルします。
  */
-gulp.task('dev:bundle', () => {
-  return merge(
-    bundle('core'),
-    bundle('front')
-  );
+gulp.task('test:bundle', () => {
+  return bundle();
 });
 
 /**
- * 開発用のローカルサーバーを起動します。
+ * mochaで単体テストを実行します。
  */
-gulp.task('dev:serve',
+gulp.task('test:mocha',
   shell.task([
-    'firebase serve --only functions,hosting --port 5000 --host localhost',
+    './node_modules/.bin/mocha --ui tdd test/index.bundle.js',
   ], {
     verbose: true,
   })
@@ -110,17 +103,6 @@ gulp.task('clean:ts', () => {
   ]);
 });
 
-/**
- * デプロイ処理を実行します。
- */
-gulp.task('deploy',
-  shell.task([
-    'firebase deploy --only functions',
-  ], {
-    verbose: true,
-  })
-);
-
 //----------------------------------------------------------------------
 //
 //  Functions
@@ -128,13 +110,12 @@ gulp.task('deploy',
 //----------------------------------------------------------------------
 
 /**
- * 指定されたパッケージをバンドルします。
- * @param package
+ * パッケージをバンドルします。
  */
-function bundle(package) {
+function bundle() {
   return webpackStream({
     entry: {
-      'index': `./test/${package}/index`,
+      'index': `./test/index`,
     },
     output: {
       filename: '[name].bundle.js',
@@ -148,20 +129,24 @@ function bundle(package) {
         {
           test: /\.tsx?$/,
           // ローダーの処理対象から外すディレクトリ
-          exclude: [/node_modules/, /bower_components/],
+          exclude: [/node_modules/],
           use: [{
             loader: 'ts-loader',
             options: {
               compilerOptions: {
                 sourceMap: true,
               },
+              transpileOnly: true,
             },
           }],
         }
       ]
     },
     devtool: 'inline-source-map',
-    watch: true,
+    // ビルトインの path, fs, …といったモジュールを無視する
+    target: 'node',
+    // node_modulesフォルダのすべてのモジュールを無視する
+    externals: [nodeExternals()],
   }, webpack)
-    .pipe(gulp.dest(`test/${package}`));
+    .pipe(gulp.dest('test'));
 }
