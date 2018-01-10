@@ -1,13 +1,15 @@
 {
   "functions": {
-    "predeploy": "npm --prefix functions run build"
+    "predeploy": "cd functions && gulp build"
   },
   "hosting": {
-    "public": "./",
+    "public": "public",
     "ignore": [
-      "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/*.ts",
+      "test/**",
+      "**/node_modules/**",
+      "**/bower_components/**"
     ],
     "rewrites": [
       {

@@ -7,7 +7,8 @@ const shell = require('gulp-shell');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
+const WebpackNodeExternals = require('webpack-node-externals');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 //----------------------------------------------------------------------
 //
@@ -146,7 +147,10 @@ function bundle() {
     // ビルトインの path, fs, …といったモジュールを無視する
     target: 'node',
     // node_modulesフォルダのすべてのモジュールを無視する
-    externals: [nodeExternals()],
+    externals: [WebpackNodeExternals()],
+    plugins: [
+      new ForkTsCheckerWebpackPlugin()
+    ],
   }, webpack)
     .pipe(gulp.dest('test'));
 }

@@ -1,4 +1,3 @@
-/// <reference path="../../../src/typings.d.ts" />
 import parser from '../../../src/core/parser';
 
 suite('parser', () => {

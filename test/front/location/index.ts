@@ -1,4 +1,3 @@
-/// <reference path="../../../src/typings.d.ts" />
 import location from '../../../src/front/location';
 
 suite('location', () => {

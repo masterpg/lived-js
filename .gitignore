@@ -4,6 +4,10 @@ node_modules/
 *.log
 *.tmp
 
+/demo/**/*.js
+/demo/**/*.js.map
+/demo/src/**/*.d.ts
+
 /functions/lib/
 
 /functions/src/serviceAccountKey.json
@@ -17,6 +21,8 @@ node_modules/
 !/functions/test/typings.d.ts
 
 /lib/**/*.js.map
+
+/public/
 
 /src/**/*.js
 /src/**/*.js.map
